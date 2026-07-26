@@ -1,7 +1,7 @@
 streamlit>=1.38
 openai>=1.40
-anthropic>=0.34
-huggingface_hub>=0.24
+google-generativeai>=0.8
+groq>=0.9
 python-dotenv>=1.0
 pydantic>=2.8
 
