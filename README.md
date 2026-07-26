@@ -14,48 +14,50 @@ Code review tools tell you what's wrong. They don't make it *entertaining*. This
 
 ## Architecture
 
+```text
 User pastes code
-│
-▼
+      │
+      ▼
 ┌─────────────────┐
-│ courtroom.py │ orchestrates the whole trial
+│   courtroom.py   │  orchestrates the whole trial
 └─────────────────┘
-│
-├──► Prosecutor (OpenAI GPT-4o) — opening argument
-├──► Defense (Google Gemini) — opening argument
-├──► Prosecutor rebuttal
-├──► Defense rebuttal
-└──► Judge (Groq / Llama 3.1 8B) — verdict
-│
-▼
+      │
+      ├──► Prosecutor (OpenAI GPT-4o)   — opening argument
+      ├──► Defense (Google Gemini)      — opening argument
+      ├──► Prosecutor rebuttal
+      ├──► Defense rebuttal
+      └──► Judge (Groq / Llama 3.1 8B)  — verdict
+      │
+      ▼
 Streamlit renders it as a live transcript
-
+```
 
 Each role is its own module with its own system prompt and its own model client, so swapping any one model out later doesn't touch the other two — the defense role actually started as Claude and moved to Gemini partway through building this, and the swap only took a few minutes because of that separation.
 
 ## Project layout
 
+```text
 ai-code-court/
-├── app.py # Streamlit UI — the courtroom itself
+├── app.py                  # Streamlit UI — the courtroom itself
 ├── core/
-│ ├── prosecutor.py # GPT-4o role
-│ ├── defense.py # Gemini role
-│ ├── judge.py # Groq / Llama 3.1 8B role
-│ └── courtroom.py # runs the trial, manages turn order + transcript
+│   ├── prosecutor.py       # GPT-4o role
+│   ├── defense.py          # Gemini role
+│   ├── judge.py            # Groq / Llama 3.1 8B role
+│   └── courtroom.py        # runs the trial, manages turn order + transcript
 ├── utils/
-│ └── prompts.py # all system prompts live here, not scattered in code
+│   └── prompts.py          # all system prompts live here, not scattered in code
 ├── finetuning/
-│ ├── prepare_dataset.py # builds QLoRA training set from verdict examples
-│ ├── train_qlora.py # Colab QLoRA fine-tune script, actually run and working
-│ └── dataset/
-│ ├── judge_verdicts_sample.jsonl
-│ └── collected_verdicts.jsonl # 50 real examples auto-collected from live trials
+│   ├── prepare_dataset.py  # builds QLoRA training set from verdict examples
+│   ├── train_qlora.py      # Colab QLoRA fine-tune script, actually run and working
+│   └── dataset/
+│       ├── judge_verdicts_sample.jsonl
+│       └── collected_verdicts.jsonl  # 50 real examples auto-collected from live trials
 ├── tests/
-│ └── test_courtroom.py
+│   └── test_courtroom.py
 ├── .env.example
 ├── requirements.txt
 └── .gitignore
-
+```
 
 ## Setup
 
