@@ -6,7 +6,7 @@ Paste your bad code. Get dragged in front of a jury of language models.
 - **Defense Attorney** (Gemini) — has to defend every questionable decision you made, even the `except: pass`.
 - **Judge** (Llama 3.1 8B, served via Groq) — listens to both sides and hands down a verdict, sentence, and one-liner roast.
 
-Live demo: (add Streamlit link once deployed)
+Live demo: [ai-code-court-008.streamlit.app](https://ai-code-court-008.streamlit.app/)
 
 ## Why this exists
 
