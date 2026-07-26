@@ -1,0 +1,14 @@
+streamlit>=1.38
+openai>=1.40
+anthropic>=0.34
+huggingface_hub>=0.24
+python-dotenv>=1.0
+pydantic>=2.8
+
+# only needed for the finetuning/ scripts, not for running the app
+# torch
+# transformers
+# peft
+# bitsandbytes
+# datasets
+# accelerate

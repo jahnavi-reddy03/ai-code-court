@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+.streamlit/secrets.toml
+*.log
+
+# fine-tuning artifacts — too big for git, host on HF Hub instead
+finetuning/checkpoints/
+finetuning/*.bin
+finetuning/*.safetensors
+*.ipynb_checkpoints/
