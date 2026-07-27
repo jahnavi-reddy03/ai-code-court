@@ -1,27 +1,26 @@
 """
-QLoRA fine-tune of Llama 3 8B Instruct on the judge dataset. Built to run on a
-single Colab GPU (T4 works for 8B in 4-bit, A100 is faster if you have Colab Pro).
+QLoRA fine-tune of Llama 3.1 8B Instruct on the judge dataset. Built to run on a
+single Colab GPU (T4 works for 8B in 4-bit).
 
 Steps to use on Colab:
-    !pip install -q transformers peft bitsandbytes accelerate datasets trl
+    !pip install -q transformers peft bitsandbytes accelerate datasets trl -U
     Upload finetuning/dataset/judge_train.jsonl (run prepare_dataset.py locally first)
-    Set HUGGINGFACE_API_TOKEN as a Colab secret if the base model is gated
+    Log in with huggingface_hub.login() (needed for the gated Llama 3.1 base model)
     Run this script
 
-Output: a LoRA adapter you push to the HF Hub, then point JUDGE_MODEL_ENDPOINT
-at (either a merged model or an adapter loaded on top of the base at inference time).
+Output: a LoRA adapter, saved locally then pushed to the HF Hub.
 """
 
 import torch
 from datasets import load_dataset
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
-from trl import SFTTrainer
+from trl import SFTTrainer, SFTConfig
 
-BASE_MODEL = "meta-llama/Meta-Llama-3-8B-Instruct"
-DATASET_PATH = "dataset/judge_train.jsonl"
+BASE_MODEL = "meta-llama/Llama-3.1-8B-Instruct"
+DATASET_PATH = "judge_train.jsonl"  # flat path — matches Colab's upload location
 OUTPUT_DIR = "checkpoints/llama3-8b-code-judge"
-HUB_REPO = "jahnavi-reddy03/llama3-8b-code-judge"  # where the adapter gets pushed
+HUB_REPO = "jahnavi0803/llama3-8b-code-judge"  # your actual Hugging Face username
 
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
@@ -60,7 +59,7 @@ def format_example(example):
 
 dataset = dataset.map(format_example)
 
-training_args = TrainingArguments(
+training_args = SFTConfig(
     output_dir=OUTPUT_DIR,
     per_device_train_batch_size=2,
     gradient_accumulation_steps=4,
@@ -70,13 +69,13 @@ training_args = TrainingArguments(
     logging_steps=10,
     save_strategy="epoch",
     report_to="none",
+    dataset_text_field="text",
+    max_length=1024,
 )
 
 trainer = SFTTrainer(
     model=model,
     train_dataset=dataset,
-    dataset_text_field="text",
-    max_seq_length=1024,
     args=training_args,
 )
 
@@ -84,7 +83,4 @@ if __name__ == "__main__":
     trainer.train()
     model.save_pretrained(OUTPUT_DIR)
     tokenizer.save_pretrained(OUTPUT_DIR)
-    # uncomment once you're ready to publish:
-    # model.push_to_hub(HUB_REPO)
-    # tokenizer.push_to_hub(HUB_REPO)
     print(f"Adapter saved to {OUTPUT_DIR}. Push to {HUB_REPO} when ready.")

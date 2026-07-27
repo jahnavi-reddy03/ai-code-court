@@ -7,15 +7,14 @@ load_dotenv()
 st.set_page_config(page_title="AI Code Court ⚖️", page_icon="⚖️", layout="centered")
 
 ROLE_STYLE = {
-    "prosecutor_opening": ("🔴 Prosecutor (GPT-4)", "opening argument"),
+   "prosecutor_opening": ("🔴 Prosecutor (GPT-4o)", "opening argument"),
     "defense_opening": ("🔵 Defense (Gemini)", "opening argument"),
-    "prosecutor_rebuttal": ("🔴 Prosecutor (GPT-4)", "rebuttal"),
+    "prosecutor_rebuttal": ("🔴 Prosecutor (GPT-4o)", "rebuttal"),
     "defense_rebuttal": ("🔵 Defense (Gemini)", "rebuttal"),
 }
 
 st.title("⚖️ AI Code Court")
-st.caption("Paste your code. GPT-4 prosecutes it, Gemini defends it, a fine-tuned Llama 3 judges it.")
-
+st.caption("Paste your code. GPT-4o prosecutes it, Gemini defends it, Llama 3.1 8B (via Groq) judges it.")
 code = st.text_area(
     "Exhibit A — your code",
     height=280,
