@@ -97,17 +97,3 @@ Training results: loss dropped from 0.71 to 0.62 over 3 epochs, mean token accur
 
 Full training and dataset-prep code is in `finetuning/`.
 
-## FAQ: **Did you actually fine-tune a model?**
-
-Yes. 50 real training examples were collected from this app, and a QLoRA fine-tune of
-Llama 3.1 8B Instruct was run on a free Colab GPU — training loss dropped from 0.71 to 0.62 over
-3 epochs, reaching 87% mean token accuracy. The resulting adapter is published at
-[huggingface.co/jahnavi0803/llama3-8b-code-judge](https://huggingface.co/jahnavi0803/llama3-8b-code-judge)
-and confirmed working via a real test generation.
-
-**Is that the model running in the live demo above?** 
-No. The live app's judge calls the *base*
-Llama 3.1 8B via Groq, chosen for speed and to avoid the ongoing cost of dedicated GPU hosting
-(~$0.60–$1/hour) that serving the fine-tuned adapter live would require. The fine-tune is real,
-trained, tested, and published — it's just not wired into this particular live demo. Anyone can
-load and run the fine-tuned adapter themselves using the code on the model page.
